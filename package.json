@@ -5,8 +5,8 @@
     "scripts": {
         "start": "bun run dev",
         "dev": "bun run src/index.ts",
-        "list-devices": "bun run src/list-devices.ts",
-        "list-interfaces": "bun run src/list-interfaces.ts",
+        "list-devices": "bun run src/index.ts list-devices",
+        "list-interfaces": "bun run src/index.ts list-interfaces",
         "build": "bun run build.ts"
     },
     "devDependencies": {

@@ -17,12 +17,12 @@ Download the executable for your platform and `config.example.toml` from the [la
 | File | Platform |
 |---|---|
 | `best-lights-selector-Windows-x86_64.exe` | Windows (x64) (tested) |
-| `best-lights-selector-macOS-aarch64` | macOS (Apple Silicon) |
+| `best-lights-selector-macOS-aarch64` | macOS (Apple Silicon) (tested) |
 | `best-lights-selector-Linux-x86_64-musl` | Linux (x64) |
 | `best-lights-selector-Linux-aarch64-musl` | Linux (arm64) |
 | `config.example.toml` | Config template |
 
-> Developed and tested on Windows. The macOS / Linux builds come from the same code but are untested.
+> Tested on Windows and macOS. The Linux builds come from the same code but are untested.
 
 Each executable has a `.sha256` next to it. They are standalone; nothing else needs to be installed. On macOS / Linux, run `chmod +x` first.
 
@@ -33,7 +33,7 @@ All settings live in `config.toml`, read from the current working directory. Cop
 > `config.toml` contains your SwitchBot credentials and the pairing data (`.matter-storage`) is sensitive too. Both are in `.gitignore`; never commit them.
 
 1. Set the SwitchBot `token` / `secret` in `[switchbot]` (see the comments in the file for how to get them).
-2. Find the deviceId of each light and set it as `device_id` in `[lights.<name>]`. It can be one string or an array (`["id1", "id2"]`); all listed devices are switched together (the SwitchBot API has no groups, so one request is sent per device). From source, `bun run list-devices` lists them (the executable does not include this command).
+2. Find the deviceId of each light and set it as `device_id` in `[lights.<name>]`. It can be one string or an array (`["id1", "id2"]`); all listed devices are switched together (the SwitchBot API has no groups, so one request is sent per device). `best-lights-selector list-devices` lists them (from source: `bun run list-devices`).
 3. Define time windows in `[schedules.N]` (`start` inclusive, `end` exclusive; if `start` > `end` the window wraps past midnight).
 
 ## Run
@@ -48,7 +48,7 @@ If it is not paired yet, a QR code and a manual pairing code are printed to the 
 
 Pairing data is stored in `storage_path` (default `.matter-storage`). Delete that folder to pair again.
 
-> A VPN / virtual adapter (e.g. Tailscale) can prevent Home from connecting. In that case set `[matter] network_interface` in `config.toml` to the number of your LAN adapter (e.g. `15`). If the name is not found at startup, the usable adapters are printed. `bun run list-interfaces` lists them.
+> A VPN / virtual adapter (e.g. Tailscale) can prevent Home from connecting. In that case set `[matter] network_interface` in `config.toml` to the number of your LAN adapter (e.g. `15`). If the name is not found at startup, the usable adapters are printed. `best-lights-selector list-interfaces` lists them (from source: `bun run list-interfaces`).
 >
 > The Home hub (HomePod / Apple TV) and this PC must be on the same network (one where mDNS works). On Windows, allow inbound UDP 5353 (mDNS) and `matter.port` (default UDP 5540) in the firewall.
 

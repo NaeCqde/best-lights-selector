@@ -17,12 +17,12 @@ PC に常駐する仮想の **Matter 照明デバイス**です。Home アプリ
 | ファイル | 対象 |
 |---|---|
 | `best-lights-selector-Windows-x86_64.exe` | Windows (x64)(動作確認済み) |
-| `best-lights-selector-macOS-aarch64` | macOS (Apple Silicon) |
+| `best-lights-selector-macOS-aarch64` | macOS (Apple Silicon)(動作確認済み) |
 | `best-lights-selector-Linux-x86_64-musl` | Linux (x64) |
 | `best-lights-selector-Linux-aarch64-musl` | Linux (arm64) |
 | `config.example.toml` | 設定ファイルのテンプレート |
 
-> 開発・動作確認は Windows で行っています。macOS / Linux 版は同じコードからビルドしていますが、動作は未確認です。
+> 動作確認は Windows と macOS で行っています。Linux 版は同じコードからビルドしていますが、動作は未確認です。
 
 各実行ファイルには `.sha256` が付いています。単体実行ファイルなので別途インストールは不要です。macOS / Linux では `chmod +x` で実行権限を付けてください。
 
@@ -33,7 +33,7 @@ PC に常駐する仮想の **Matter 照明デバイス**です。Home アプリ
 > `config.toml` には SwitchBot の認証情報が含まれ、ペアリング情報(`.matter-storage`)も機密です。どちらも `.gitignore` で除外してあるので、コミットしないでください。
 
 1. `[switchbot]` に token / secret を設定します(取得方法はファイル内コメント参照)。
-2. ライトの deviceId を調べ、`[lights.<名前>]` の `device_id` に設定します。文字列 1 つでも配列(`["id1", "id2"]`)でも書け、配列の場合は列挙したデバイスをまとめて ON/OFF します(SwitchBot API にグループ機能はないため、デバイスごとにリクエストを送ります)。一覧はソースから `bun run list-devices` で取得できます(実行ファイルには含まれません)。
+2. ライトの deviceId を調べ、`[lights.<名前>]` の `device_id` に設定します。文字列 1 つでも配列(`["id1", "id2"]`)でも書け、配列の場合は列挙したデバイスをまとめて ON/OFF します(SwitchBot API にグループ機能はないため、デバイスごとにリクエストを送ります)。一覧は `best-lights-selector list-devices`(ソースから実行する場合は `bun run list-devices`)で取得できます。
 3. `[schedules.N]` に時間帯とライトを設定します(`start` 以上 `end` 未満。`start` > `end` なら日付をまたぎます)。
 
 ## 実行
@@ -52,7 +52,7 @@ PC に常駐する仮想の **Matter 照明デバイス**です。Home アプリ
 > `[matter] network_interface` に LAN 側のアダプタの番号(例: `15`)を指定してください。
 > 起動時に名前が見つからない場合は、使えるアダプタ一覧が表示されます。
 >
-> アダプタの番号は `bun run list-interfaces` で一覧できます(番号が見つからない場合も、起動時に使える番号が表示されます)。
+> アダプタの番号は `best-lights-selector list-interfaces`(ソースからは `bun run list-interfaces`)で一覧できます(番号が見つからない場合も、起動時に使える番号が表示されます)。
 >
 > Home のハブ(HomePod / Apple TV)とこの PC は同じネットワーク(mDNS が通る LAN)にいる必要があります。
 > Windows ファイアウォールで UDP 5353(mDNS)と `matter.port`(既定 UDP 5540)の受信を許可してください。
