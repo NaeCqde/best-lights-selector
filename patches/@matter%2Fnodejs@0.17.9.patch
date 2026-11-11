@@ -1,0 +1,45 @@
+diff --git a/dist/esm/net/NodeJsNetwork.js b/dist/esm/net/NodeJsNetwork.js
+index da226b3c48f741fed3a5fb0e3019e0afd32f1a3b..91b9156047e75d708b2d35a274f9bf4d08574ff8 100644
+--- a/dist/esm/net/NodeJsNetwork.js
++++ b/dist/esm/net/NodeJsNetwork.js
+@@ -20,8 +20,24 @@ import { NodeJsTcpConnection } from "./NodeJsTcpConnection.js";
+ import { NodeJsTcpListener } from "./NodeJsTcpListener.js";
+ import { NodeJsUdpSocket } from "./NodeJsUdpSocket.js";
+ const logger = Logger.get("NetworkNode");
++// PATCH(best-lights-selector): on Windows an "interface" coming from received packets is the numeric IPv6 zone id
++// (see getNetInterfaceZoneIpv6Internal), but the lookups below are keyed by interface name. Resolve zone ids to names,
++// otherwise mDNS queries are dropped (no records for interface "15") and responses cannot be sent.
++function resolveInterfaceName(netInterface) {
++  const all = networkInterfaces();
++  if (all[netInterface] !== void 0 || netInterface === void 0) {
++    return netInterface;
++  }
++  for (const name in all) {
++    if ((all[name] ?? []).some((info) => info.family === "IPv6" && info.scopeid !== void 0 && String(info.scopeid) === String(netInterface) && info.address.startsWith("fe80::"))) {
++      return name;
++    }
++  }
++  return netInterface;
++}
+ class NodeJsNetwork extends Network {
+   static getMulticastInterfaceIpv4(netInterface) {
++    netInterface = resolveInterfaceName(netInterface);
+     const netInterfaceInfo = networkInterfaces()[netInterface];
+     if (netInterfaceInfo === void 0) throw new NetworkError(`Unknown interface: ${netInterface}`);
+     for (const info of netInterfaceInfo) {
+@@ -57,6 +73,7 @@ class NodeJsNetwork extends Network {
+     }
+   }
+   static getNetInterfaceZoneIpv6(netInterface) {
++    netInterface = resolveInterfaceName(netInterface);
+     const netInterfaceInfo = networkInterfaces()[netInterface];
+     if (netInterfaceInfo === void 0) throw new NetworkError(`Unknown interface: ${netInterface}`);
+     return this.getNetInterfaceZoneIpv6Internal(netInterface, netInterfaceInfo);
+@@ -141,6 +158,7 @@ class NodeJsNetwork extends Network {
+     return result;
+   }
+   getIpMac(netInterface) {
++    netInterface = resolveInterfaceName(netInterface);
+     const netInterfaceInfo = networkInterfaces()[netInterface];
+     if (netInterfaceInfo === void 0) return void 0;
+     const ipV4 = netInterfaceInfo.filter((info) => familyIs(4, info)).map(({ address }) => address);

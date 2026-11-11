@@ -1,0 +1,35 @@
+# dependencies (bun install)
+node_modules
+
+# output
+out
+dist
+*.tgz
+
+# code coverage
+coverage
+*.lcov
+
+# logs
+logs
+_.log
+report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
+
+# caches
+.eslintcache
+.cache
+*.tsbuildinfo
+
+# IntelliJ based IDEs
+.idea
+
+# Finder (MacOS) folder config
+.DS_Store
+
+# local config (holds SwitchBot token/secret) and Matter pairing data
+config.toml
+.matter-storage
+
+# build output binary (see `bun run build`)
+best-lights-selector
+best-lights-selector.exe

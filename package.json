@@ -1,0 +1,26 @@
+{
+    "name": "best-lights-selector",
+    "module": "src/index.ts",
+    "type": "module",
+    "scripts": {
+        "start": "bun run dev",
+        "dev": "bun run src/index.ts",
+        "list-devices": "bun run src/list-devices.ts",
+        "list-interfaces": "bun run src/list-interfaces.ts",
+        "build": "bun run build.ts"
+    },
+    "devDependencies": {
+        "@types/bun": "latest",
+        "@types/node": "^26.1.1"
+    },
+    "peerDependencies": {
+        "typescript": "^5"
+    },
+    "dependencies": {
+        "@matter/main": "^0.17.9",
+        "smol-toml": "^1.9.1"
+    },
+    "patchedDependencies": {
+        "@matter/nodejs@0.17.9": "patches/@matter%2Fnodejs@0.17.9.patch"
+    }
+}

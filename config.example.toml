@@ -1,0 +1,65 @@
+# best-lights-selector config template.
+#
+# Copy this to config.toml (gitignored, since it will hold your SwitchBot
+# token/secret) in the current working directory and fill in the blanks.
+
+[switchbot]
+# Credentials for the SwitchBot official Cloud API.
+# How to obtain: SwitchBot app -> Profile -> Settings -> About (基本データ)
+#   -> tap the version number repeatedly -> Developer Options -> generate Token/Secret
+token = ""
+secret = ""
+
+[matter]
+# Virtual Matter light exposed to Home. Add it in the Home app with
+# "Add Accessory" -> "More options" and enter the setup code printed at startup.
+name = "Best Light"
+port = 5540
+# Network adapter to advertise on, as its interface number (run `bun run list-interfaces` to see
+# them, e.g. 15 for the wired LAN). Set this if you have VPN/virtual adapters (Tailscale, Hyper-V,
+# WSL...) that Home should not use. 0 = all adapters.
+network_interface = 0
+# Pairing credentials. Defaults are the well-known matter.js test values; change them
+# if you'd rather not use them (passcode: 1-99999998, discriminator: 0-4095).
+passcode = 20202021
+discriminator = 3840
+# Where the pairing/fabric data is stored (relative to the current directory).
+# Delete this folder to un-pair and start over.
+storage_path = ".matter-storage"
+# Log verbosity of the Matter stack: "debug", "info", "warn" or "error". Use "debug" to see
+# network traffic when troubleshooting pairing/connection problems.
+log_level = "info"
+
+# Lights controlled via the SwitchBot Cloud API. Keyed by a name of your choice
+# (used by [schedules.*] below). Find the device_id by running: bun run list-devices
+# device_id is either a single string or an array of strings; every device listed is
+# switched together (one API request per device).
+[lights.ceiling]
+device_id = "XXXXXXXXXXXX" # e.g. ceiling light
+
+[lights.spots]
+device_id = [
+    "XXXXXXXXXXXX", # spot 1
+    "YYYYYYYYYYYY", # spot 2
+    "ZZZZZZZZZZZZ", # spot 3
+]
+
+# When Home turns the virtual light ON, the light of the schedule that contains the
+# current time (local time of this PC) is turned ON, and every other light is turned OFF.
+# When Home turns it OFF, all lights are turned OFF.
+#
+# Times are "HH:MM" (start inclusive, end exclusive). If start is later than end, the
+# window wraps past midnight (e.g. 18:00 -> 06:00). If windows overlap, the earlier
+# [schedules.N] wins. The N keys are only for ordering/readability.
+[schedules.1]
+start = "06:00"
+end = "18:00"
+light = "ceiling"
+
+[schedules.2]
+start = "18:00"
+end = "06:00"
+light = "spots"
+
+# Light to use when no schedule matches the current time. Leave empty to turn on nothing.
+default_light = "ceiling"
