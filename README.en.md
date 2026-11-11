@@ -46,6 +46,8 @@ Start the executable from the folder that contains `config.toml`.
 
 If it is not paired yet, a QR code and a manual pairing code are printed to the console. In the Home app choose "Add Accessory" and scan the QR code, or use "More options" and enter the code (accept the uncertified-accessory warning with "Add Anyway").
 
+Use `--config <path>` to read another config file.
+
 Pairing data is stored in `storage_path` (default `.matter-storage`). Delete that folder to pair again.
 
 > A VPN / virtual adapter (e.g. Tailscale) can prevent Home from connecting. In that case set `[matter] network_interface` in `config.toml` to the number of your LAN adapter (e.g. `15`). If the name is not found at startup, the usable adapters are printed. `best-lights-selector list-interfaces` lists them (from source: `bun run list-interfaces`).

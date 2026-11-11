@@ -140,7 +140,16 @@ export async function loadConfig(path: string = resolveConfigPath()): Promise<Co
     return { switchbot, matter, lights, schedules, defaultLight };
 }
 
-// Config is TOML-only — default path or an explicit path as the first CLI argument.
+// Config path: `--config <path>` / `-c <path>`, otherwise config.toml in the current directory.
 function resolveConfigPath(): string {
-    return process.argv[2] ?? DEFAULT_CONFIG_PATH;
+    const args = process.argv.slice(2);
+    const i = args.findIndex((a) => a === '--config' || a === '-c');
+    if (i !== -1) {
+        const path = args[i + 1];
+        if (!path) {
+            throw new Error('[ERROR] --config requires a path');
+        }
+        return path;
+    }
+    return DEFAULT_CONFIG_PATH;
 }
