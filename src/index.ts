@@ -1,4 +1,3 @@
-import './settings.ts';
 import { listDevices } from './list-devices.ts';
 import { listInterfaces } from './list-interfaces.ts';
 
