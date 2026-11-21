@@ -1,5 +1,6 @@
 import { parse } from 'smol-toml';
 
+import { findSettingsFile } from './settings.ts';
 import { resolveNetworkInterface } from './network.ts';
 import type { Config, Light, MatterConfig, Schedule, SwitchBotConfig } from './types.ts';
 
@@ -140,7 +141,7 @@ export async function loadConfig(path: string = resolveConfigPath()): Promise<Co
     return { switchbot, matter, lights, schedules, defaultLight };
 }
 
-// Config path: `--config <path>` / `-c <path>`, otherwise config.toml in the current directory.
+// Config path: `--config <path>` / `-c <path>`, otherwise config.toml in the current directory (only when it has none, the one next to the executable).
 function resolveConfigPath(): string {
     const args = process.argv.slice(2);
     const i = args.findIndex((a) => a === '--config' || a === '-c');
@@ -151,5 +152,5 @@ function resolveConfigPath(): string {
         }
         return path;
     }
-    return DEFAULT_CONFIG_PATH;
+    return findSettingsFile(DEFAULT_CONFIG_PATH);
 }
