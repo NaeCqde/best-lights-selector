@@ -68,7 +68,7 @@ export async function getPower(config: SwitchBotConfig, deviceId: string): Promi
         const status = await request<{ power?: string }>(
             config,
             'GET',
-            `/devices/${deviceId}/status`,
+            `/devices/${encodeURIComponent(deviceId)}/status`,
         );
         if (status?.power === 'on') return true;
         if (status?.power === 'off') return false;
@@ -83,7 +83,7 @@ export async function setPower(
     deviceId: string,
     on: boolean,
 ): Promise<void> {
-    await request(config, 'POST', `/devices/${deviceId}/commands`, {
+    await request(config, 'POST', `/devices/${encodeURIComponent(deviceId)}/commands`, {
         command: on ? 'turnOn' : 'turnOff',
         parameter: 'default',
         commandType: 'command',
